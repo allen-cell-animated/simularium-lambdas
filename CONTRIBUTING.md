@@ -1,36 +1,63 @@
-# Contributing to Allen Institute for Cell Science Open Source
+# Contributing
 
-Thank you for your interest in contributing to this Allen Institute for Cell Science open source project! This document is
-a set of guidelines to help you contribute to this project.
+Contributions are welcome, and they are greatly appreciated! Every little bit
+helps, and credit will always be given.
 
-## Code of Conduct
+## Get Started!
 
-By participating in this project, you are expected to uphold our [Code of
-Conduct][code_of_conduct].
+Ready to contribute? Here's how to set up `simularium_lambdas` for local development.
 
-[code_of_conduct]: CODE_OF_CONDUCT.md
+1. Fork the `simularium_lambdas` repo on GitHub.
 
-## Project Documentation
+2. Clone your fork locally:
 
-The `README` in the root of the repository should contain or link to
-project documentation. If you cannot find the documentation you're
-looking for, please file a GitHub issue with details of what
-you'd like to see documented.
+    ```bash
+    git clone git@github.com:{your_name_here}/simularium_lambdas.git
+    ```
 
-## How to Contribute
+3. Install the project in editable mode. (It is also recommended to work in a virtualenv or anaconda environment):
 
-Typical steps to contribute:
+    ```bash
+    cd simularium_lambdas/
+    pip install -e .[dev]
+    ```
 
-1. Fork the repo on GitHub.
+4. Create a branch for local development:
 
-2. Create a branch and make your edits on your branch, pushing back to your fork.
+    ```bash
+    git checkout -b {your_development_type}/short-description
+    ```
 
-3. Ensure that your changes are working, pass any linting and tests in the project. Add tests and documentation as needed.
+    Ex: feature/read-tiff-files or bugfix/handle-file-not-found<br>
+    Now you can make your changes locally.
 
-4. Submit a pull request to merge your fork's branch into this repository, via GitHub.
+5. When you're done making changes, check that your changes pass linting and
+   tests, including testing other Python versions with make:
 
-## Questions or Thoughts?
+    ```bash
+    make build
+    ```
 
-Talk to us on [one of our community forums][community].
+6. Commit your changes and push your branch to GitHub:
 
-[community]: https://forum.allencell.org/
+    ```bash
+    git add .
+    git commit -m "Resolves gh-###. Your detailed description of your changes."
+    git push origin {your_development_type}/short-description
+    ```
+
+7. Submit a pull request through the GitHub website.
+
+## Deploying
+
+A reminder for the maintainers on how to deploy.
+Make sure all your changes are committed.
+Then run:
+
+```bash
+bump2version patch # possible: major / minor / patch
+git push
+git push --tags
+```
+
+This will release a new package version on Git + GitHub and publish to PyPI.
