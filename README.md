@@ -8,6 +8,13 @@ AWS Lambdas for Simularium
 
 ---
 
+## Dev Notes
+- 9/8/2021
+    - We added new Makefile scripts to carry out some routine AWS tasks via the command line (see "Commands You Need to Know" below).
+    - We published the cellpack converter Lambda and verified that we can use it to convert CellPack data to a Simularium file through a REST API. The Lambda and the API configuration are under the aics-ac AWS account, in the region us-west-2. The API Gateway API is named cellpack-API.
+    - In order to keep the simulariumio layer under the size limit, we had to remove numpy and Pandas from the simulariumio package and attach the SciPy and Pandas layers to the Lambda separately. Pandas layer ARN: `arn:aws:lambda:us-west-2:770693421928:layer:Klayers-python38-pandas:38`
+    - We started to write a Lambda function for converting Readdy files but realized that the converter needs a filepath in a local operating system as an input, as do the other converters. We need to think more about the best way to handle this issue.
+
 ## Features
 
 -   Store values and retain the prior value in memory
@@ -35,7 +42,7 @@ For full package documentation please visit [allen-cell-animated.github.io/simul
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
 
-## The Four Commands You Need To Know
+## Commands You Need To Know
 
 1. `pip install -e .[dev]`
 
@@ -56,6 +63,21 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
     This will generate and launch a web browser to view the most up-to-date
     documentation for your Python package.
+
+5. `make update-simulariumio-layer`
+
+    This will prepare a new version of the simulariumio layer and publish it to AWS, automatically incrementing
+    the published version number as well.
+
+6. `make create-lambda function=xxx iam=xxx`
+    
+    This will create a new AWS Lambda named [function] from a file with the name [function] inside the
+    scripts directory, given the AWS IAM account ID [iam].
+
+7. `make invoke-lambda function=xxx`
+
+    This will call an AWS Lambda function named [function] for testing.
+
 
 #### Additional Optional Setup Steps:
 
