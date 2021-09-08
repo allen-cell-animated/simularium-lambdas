@@ -45,6 +45,7 @@ clean:  ## clean all build, python, and testing files
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 	rm -fr layers
+	rm -fr simulariumio-layer
 
 build: ## run tox / run tests and lint
 	tox
@@ -59,10 +60,15 @@ docs: ## generate Sphinx HTML documentation, including API docs, and serve to br
 	make gen-docs
 	$(BROWSER) docs/_build/html/index.html
 
-build-layers:
+build-simulariumio-layer:
+	make clean
 	pip install simulariumio --target simulariumio-layer/python/lib/python3.8/site-packages
+	rm -fr simulariumio-layer/python/lib/python3.8/site-packages/numpy simulariumio-layer/python/lib/python3.8/site-packages/numpy-*
+	rm -fr simulariumio-layer/python/lib/python3.8/site-packages/pandas simulariumio-layer/python/lib/python3.8/site-packages/pandas-*
 	mkdir layers
 	zip -r layers/simulariumio.zip simulariumio-layer
 
-publish-layers:
-	aws lambda publish-layer-version --layer-name simulariumio --description "simulariumio"	--license-info "MIT" --zip-file fileb://layers/simulariumio.zip --compatible-runtimes python3.8
+publish-simulariumio-layer:
+	aws lambda publish-layer-version --layer-name simulariumio --description "simulariumio"	--license-info "MIT" --zip-file fileb://layers/simulariumio.zip --compatible-runtimes python3.8 --cli-connect-timeout 6000
+
+## Add a update-layer-version or something like that, see https://docs.aws.amazon.com/lambda/latest/dg/invocation-layers.html
