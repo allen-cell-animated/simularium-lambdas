@@ -73,9 +73,16 @@ build-simulariumio-layer:
 publish-simulariumio-layer:
 	aws lambda publish-layer-version --layer-name simulariumio --description "simulariumio"	--license-info "MIT" --zip-file fileb://layers/simulariumio.zip --compatible-runtimes python3.8 --cli-connect-timeout 6000
 
+## Can also get layers associated with a function this way: aws lambda get-function-configuration --function-name my-function --query 'Layers[*].Arn' --output yaml
+update-lambda-config:
+	aws lambda update-function-configuration --function-name $(function) --layers arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python38-SciPy1x:29 $(simulariumio_arn)
+
+## Run `make update-simulariumio-layer function=xxx`
 update-simulariumio-layer:
 	make build-simulariumio-layer
-	make publish-simulario-layer
+	make publish-simulariumio-layer
+	$(eval LAYER_ARN=$(shell aws lambda list-layer-versions --layer-name simulariumio --region us-west-2 --query 'max_by(LayerVersions, &Version).LayerVersionArn'))
+	make update-lambda-config function=$(function) simulariumio_arn=$(LAYER_ARN)
 
 ## Run `make create-lambda function=xxx iam=xxx`
 ##    function: name of file containing the function (without extension) & name of Lambda function
@@ -88,5 +95,3 @@ create-lambda:
 ## Run `make invoke-lambda function=xxx`
 invoke-lambda:
 	aws lambda invoke --function-name $(function) out --log-type Tail --query 'LogResult' --output text |  base64 -d
-
-## TODO: Add a update-layer-version or something like that, see https://docs.aws.amazon.com/lambda/latest/dg/invocation-layers.html

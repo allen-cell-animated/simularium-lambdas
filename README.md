@@ -64,10 +64,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
     This will generate and launch a web browser to view the most up-to-date
     documentation for your Python package.
 
-5. `make update-simulariumio-layer`
+5. `make update-simulariumio-layer function=xxx`
 
     This will prepare a new version of the simulariumio layer and publish it to AWS, automatically incrementing
-    the published version number as well.
+    the published version number as well. Then, it will update the layer in the Lambda function named [function] to the latest version.
 
 6. `make create-lambda function=xxx iam=xxx`
     
