@@ -4,6 +4,7 @@ from simulariumio import DisplayData, DISPLAY_TYPE, MetaData, ModelMetaData, Inp
 def lambda_handler(event, context):
     example_data = SpringsaladData(
         sim_view_txt_file=InputFileData(
+            # TODO: also send in meta_data and display_data through event
             file_contents=event["file_contents"],
         ),
         meta_data=MetaData(

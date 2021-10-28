@@ -81,8 +81,7 @@ update-lambda-config:
 update-simulariumio-layer:
 	make build-simulariumio-layer
 	make publish-simulariumio-layer
-	$(eval LAYER_ARN=$(shell aws lambda list-layer-versions --layer-name simulariumio --region us-west-2 --query 'max_by(LayerVersions, &Version).LayerVersionArn'))
-	make update-lambda-config function=$(function) simulariumio_arn=$(LAYER_ARN)
+	make add-layers function=$(function)
 
 ## Run `make create-lambda function=xxx iam=xxx`
 ##    function: name of file containing the function (without extension) & name of Lambda function
@@ -91,6 +90,12 @@ create-lambda:
 	make clean
 	zip -rj function.zip scripts/$(function).py
 	aws lambda create-function --function-name $(function) --zip-file fileb://function.zip --handler $(function).lambda_handler --runtime python3.8 --role arn:aws:iam::$(iam):role/lambda-ex
+	make add-layers function=$(function)
+
+## Run `make add-layers function=xxx`
+add-layers:
+	$(eval LAYER_ARN=$(shell aws lambda list-layer-versions --layer-name simulariumio --region us-west-2 --query 'max_by(LayerVersions, &Version).LayerVersionArn'))
+	make update-lambda-config function=$(function) simulariumio_arn=$(LAYER_ARN) 
 
 ## Run `make invoke-lambda function=xxx`
 invoke-lambda:

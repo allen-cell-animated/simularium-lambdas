@@ -74,6 +74,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
     This will create a new AWS Lambda named [function] from a file with the name [function] inside the
     scripts directory, given the AWS IAM account ID [iam].
 
+4. `make add-layers function=xxx`
+
+    This will add the SciPy, Pandas, and Simulariumio layers (the latest published version) to the Lambda function named [function].
+
 7. `make invoke-lambda function=xxx`
 
     This will call an AWS Lambda function named [function] for testing.
@@ -82,6 +86,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 - Lambda times out
     - Go to the Configuration tab in the Lambda page, then General configuration. You can edit the timeout there (max 15 minutes).
+- 403 error when making POST request
+    - Actually deploy the API endpoint
 
 
 #### Additional Optional Setup Steps:
