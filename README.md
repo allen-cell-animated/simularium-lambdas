@@ -78,6 +78,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
     This will call an AWS Lambda function named [function] for testing.
 
+#### Troubleshooting
+
+- Lambda times out
+    - Go to the Configuration tab in the Lambda page, then General configuration. You can edit the timeout there (max 15 minutes).
+
 
 #### Additional Optional Setup Steps:
 

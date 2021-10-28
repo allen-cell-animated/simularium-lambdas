@@ -64,7 +64,6 @@ docs: ## generate Sphinx HTML documentation, including API docs, and serve to br
 build-simulariumio-layer:
 	make clean
 	pip install simulariumio --target simulariumio-layer/python/lib/python3.8/site-packages
-	pip install pint --target simulariumio-layer/python/lib/python3.8/site-packages
 	rm -fr simulariumio-layer/python/lib/python3.8/site-packages/numpy simulariumio-layer/python/lib/python3.8/site-packages/numpy-*
 	rm -fr simulariumio-layer/python/lib/python3.8/site-packages/pandas simulariumio-layer/python/lib/python3.8/site-packages/pandas-*
 	mkdir layers
@@ -75,9 +74,10 @@ publish-simulariumio-layer:
 
 ## Can also get layers associated with a function this way: aws lambda get-function-configuration --function-name my-function --query 'Layers[*].Arn' --output yaml
 update-lambda-config:
-	aws lambda update-function-configuration --function-name $(function) --layers arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python38-SciPy1x:29 $(simulariumio_arn)
+	aws lambda update-function-configuration --function-name $(function) --layers arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python38-SciPy1x:29 arn:aws:lambda:us-west-2:770693421928:layer:Klayers-python38-pandas:38 $(simulariumio_arn)
 
 ## Run `make update-simulariumio-layer function=xxx`
+## FIXME: line 84 doesn't get the latest version number after build and publish
 update-simulariumio-layer:
 	make build-simulariumio-layer
 	make publish-simulariumio-layer
