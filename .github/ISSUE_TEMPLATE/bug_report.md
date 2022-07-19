@@ -2,23 +2,34 @@
 name: Bug Report
 about: '"Something''s wrong..."'
 title: ''
-labels: bug
+labels: 'bug'
 assignees: ''
 
 ---
 
-## Description
+## System and Software
+* simularium-lambdas Version:
+* Python Version:
+* Operating System:
 
-_A clear description of the bug_
+
+## Description
+*A clear description of the bug*
+
+
+
 
 ## Expected Behavior
+*What did you expect to happen instead?*
 
-_What did you expect to happen instead?_
+
+
 
 ## Reproduction
+*A minimal example that exhibits the behavior.*
 
-_A minimal example that exhibits the behavior._
+
+
 
 ## Environment
-
-_Any additional information about your environment. E.g. OS version, python version, browser etc._
+*Any additional information about your environment*

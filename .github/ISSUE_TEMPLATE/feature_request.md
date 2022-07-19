@@ -18,4 +18,3 @@ _Please describe how you know this is done_
 ## Details
 
 _Please provide any helpful specifications_
-
