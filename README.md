@@ -22,13 +22,23 @@ AWS Lambdas for Simularium
 
 ## Quick Start
 
-```python
-from simularium_lambdas import Example
+### Prerequisites  
+1. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. [Install Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
+3. create a virtual env: `conda create -n simularium-lambdas python=3.8`
+4. `conda activate simularium-lambdas`
+5. `pip install -e .[dev]`
+6. Configure user
 
-a = Example()
-a.get_value()  # 10
-```
+### Running scripts from makefile:
+#### Update layer:
+1. `make build-simulariumio-layer` : installs a fresh version of simulularimio in `simulariumio-layer/lib/python3.8/site-packages`
+2. `make publish-simulariumio-layer`: will create a new layer version and upload the new version of simulariumio to aws
 
+#### To use this new layer in a particular function:
+3. the publish layer command will print out the new ARN for the layer
+4. `make update-lambda-config function=smoldyn simulariumio_arn=[ARN from publish script]`. This will update the smoldyn lambda function to use this new layer. 
+   
 ## Installation
 
 **Stable Release:** `pip install simularium_lambdas`<br>
