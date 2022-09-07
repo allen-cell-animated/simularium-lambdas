@@ -72,6 +72,7 @@ build-simulariumio-layer:
 publish-simulariumio-layer:
 	aws lambda publish-layer-version --layer-name simulariumio --description "simulariumio"	--license-info "MIT" --zip-file fileb://layers/simulariumio.zip --compatible-runtimes python3.8 --cli-connect-timeout 6000
 
+## Run `make update-lambda-config function=xxx simulariumio_arn==xxx`
 ## Can also get layers associated with a function this way: aws lambda get-function-configuration --function-name my-function --query 'Layers[*].Arn' --output yaml
 update-lambda-config:
 	aws lambda update-function-configuration --function-name $(function) --layers arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python38-SciPy1x:29 arn:aws:lambda:us-west-2:770693421928:layer:Klayers-python38-pandas:38 $(simulariumio_arn)
