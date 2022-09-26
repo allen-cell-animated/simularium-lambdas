@@ -99,25 +99,25 @@ def lambda_handler(event, context):
                 ),
             )
 
-    # spatial units defaults to 1.0 meters
-    spatial_units = UnitData(
-        name=event["spatial_units"]["name"]
-            if "spatial_units" in event and "name" in event["spatial_units"]
-            else "meter",
-        magnitude=float(event["spatial_units"]["magnitude"])
-            if "spatial_units" in event and "magnitude" in event["spatial_units"]
-            else 1.0,
-    )
+    spatial_units = None
+    if "spatial_units" in event:
+        # spatial units defaults to meters on UI
+        name = event["spatial_units"]["name"] if "name" in event["spatial_units"] else "meter"
 
-    # time units default to 1.0 seconds
-    time_units = UnitData(
-        name=event["time_units"]["name"]
-            if "time_units" in event and "name" in event["time_units"]
-            else "second",
-        magnitude=float(event["time_units"]["magnitude"])
-            if "time_units" in event and "magnitude" in event["time_units"]
-            else 1.0,
-    )
+        if "magnitude" in event["spatial_units"]:
+            spatial_units = UnitData(name, float(event["spatial_units"]["magnitude"]))
+        else:
+            spatial_units = UnitData(name)
+
+    time_units = None
+    if "time_units" in event:
+         # time units default to seconds on UI
+        name = event["time_units"]["name"] if "name" in event["time_units"] else "second"
+
+        if "magnitude" in event["time_units"]:
+            time_units = UnitData(name, float(event["time_units"]["magnitude"]))
+        else:
+            time_units = UnitData(name)
 
     data = SmoldynData(
         meta_data=MetaData(
