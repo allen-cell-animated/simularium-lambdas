@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Dict
 from simulariumio.smoldyn import SmoldynConverter, SmoldynData
 from simulariumio import (
     UnitData,
@@ -32,14 +33,8 @@ def lambda_handler(event, context):
                 )
     if "meta_data" in event:
         metadata = event["meta_data"]
-        if "box_size" in metadata and len(metadata["box_size"]) == 3:
-            box_size = np.array(
-                [
-                    float(metadata["box_size"]["0"]),
-                    float(metadata["box_size"]["1"]),
-                    float(metadata["box_size"]["2"]),
-                ]
-            )
+        if "box_size" in metadata:
+            box_size = _unpack_position_vector(metadata["box_size"])
 
         if "camera_defaults" in metadata:
             camera_defaults = metadata["camera_defaults"]
@@ -47,30 +42,15 @@ def lambda_handler(event, context):
             up_vector = None
             look_at_position = None
             fov_degrees = None
-            if "position" in camera_defaults and len(camera_defaults["position"]) == 3:
-                position = np.array(
-                    [
-                        float(camera_defaults["position"]["0"]),
-                        float(camera_defaults["position"]["1"]),
-                        float(camera_defaults["position"]["2"]),
-                    ]
-                )
-            if "up_vector" in camera_defaults and len(camera_defaults["up_vector"]) == 3:
-                up_vector = np.array(
-                    [
-                        float(camera_defaults["up_vector"]["0"]),
-                        float(camera_defaults["up_vector"]["1"]),
-                        float(camera_defaults["up_vector"]["2"]),
-                    ]
-                )
-            if "look_at_position" in camera_defaults and len(camera_defaults["look_at_position"]) == 3:
-                look_at_position = np.array(
-                    [
-                        float(camera_defaults["look_at_position"]["0"]),
-                        float(camera_defaults["look_at_position"]["1"]),
-                        float(camera_defaults["look_at_position"]["2"]),
-                    ]
-                )
+            if "position" in camera_defaults:
+                position = _unpack_position_vector(camera_defaults["position"])
+
+            if "up_vector" in camera_defaults:
+                up_vector = _unpack_position_vector(camera_defaults["up_vector"])
+
+            if "look_at_position" in camera_defaults:
+                look_at_position = _unpack_position_vector(camera_defaults["look_at_position"])
+
             if "fov_degrees" in camera_defaults:
                 fov_degrees = float(camera_defaults["fov_degrees"])
 
@@ -136,3 +116,10 @@ def lambda_handler(event, context):
     )
 
     return JsonWriter.format_trajectory_data(SmoldynConverter(data)._data)
+
+
+def _unpack_position_vector(vector_dict: Dict[str, str]) -> np.ndarray:
+    if len(vector_dict) != 3:
+        # we expect x, y, z coordinates
+        return None
+    return np.array(list(map(float, list(vector_dict.values()))))
