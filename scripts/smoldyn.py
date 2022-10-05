@@ -1,11 +1,11 @@
 import numpy as np
 from typing import Dict
 from simulariumio.smoldyn import SmoldynConverter, SmoldynData
+from simulariumio.constants import DISPLAY_TYPE, DEFAULT_CAMERA_SETTINGS, DEFAULT_BOX_SIZE
 from simulariumio import (
     UnitData,
     MetaData,
     DisplayData,
-    DISPLAY_TYPE,
     ModelMetaData,
     InputFileData,
     JsonWriter,
@@ -34,22 +34,24 @@ def lambda_handler(event, context):
     if "meta_data" in event:
         metadata = event["meta_data"]
         if "box_size" in metadata:
-            box_size = _unpack_position_vector(metadata["box_size"])
+            box_size = _unpack_position_vector(metadata["box_size"], DEFAULT_BOX_SIZE)
 
         if "camera_defaults" in metadata:
             camera_defaults = metadata["camera_defaults"]
-            position = None
-            up_vector = None
-            look_at_position = None
             fov_degrees = None
-            if "position" in camera_defaults:
-                position = _unpack_position_vector(camera_defaults["position"])
 
-            if "up_vector" in camera_defaults:
-                up_vector = _unpack_position_vector(camera_defaults["up_vector"])
-
-            if "look_at_position" in camera_defaults:
-                look_at_position = _unpack_position_vector(camera_defaults["look_at_position"])
+            position = _unpack_position_vector(
+                camera_defaults.get("position"),
+                DEFAULT_CAMERA_SETTINGS.CAMERA_POSITION
+            )
+            up_vector = _unpack_position_vector(
+                camera_defaults.get("up_vector"),
+                DEFAULT_CAMERA_SETTINGS.UP_VECTOR
+            )
+            look_at_position = _unpack_position_vector(
+                camera_defaults.get("look_at_position"),
+                DEFAULT_CAMERA_SETTINGS.LOOK_AT_POSITION
+            )
 
             if "fov_degrees" in camera_defaults:
                 fov_degrees = float(camera_defaults["fov_degrees"])
@@ -118,8 +120,16 @@ def lambda_handler(event, context):
     return JsonWriter.format_trajectory_data(SmoldynConverter(data)._data)
 
 
-def _unpack_position_vector(vector_dict: Dict[str, str]) -> np.ndarray:
-    if len(vector_dict) != 3:
-        # we expect x, y, z coordinates
-        return None
-    return np.array(list(map(float, list(vector_dict.values()))))
+def _unpack_position_vector(vector_dict: Dict[str, str], defaults: np.ndarray) -> np.ndarray:
+    # if no vector information was given, go with the defaults
+    if vector_dict == None:
+        return defaults
+
+    # use all positions given, but use defaults if any are missing
+    return np.array(
+        [
+            float(vector_dict.get("0", defaults[0])),
+            float(vector_dict.get("1", defaults[1])),
+            float(vector_dict.get("2", defaults[2])),
+        ]
+    )
