@@ -38,7 +38,6 @@ def lambda_handler(event, context):
 
         if "camera_defaults" in metadata:
             camera_defaults = metadata["camera_defaults"]
-            fov_degrees = None
 
             position = _unpack_position_vector(
                 camera_defaults.get("position"),
@@ -52,9 +51,10 @@ def lambda_handler(event, context):
                 camera_defaults.get("look_at_position"),
                 DEFAULT_CAMERA_SETTINGS.LOOK_AT_POSITION
             )
-
-            if "fov_degrees" in camera_defaults:
-                fov_degrees = float(camera_defaults["fov_degrees"])
+            fov_degrees = float(camera_defaults.get(
+                "fov_degrees",
+                DEFAULT_CAMERA_SETTINGS.FOV_DEGREES
+            ))
 
             camera_data = CameraData(
                 fov_degrees=fov_degrees,
