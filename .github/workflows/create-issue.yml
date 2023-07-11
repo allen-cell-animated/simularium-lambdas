@@ -12,3 +12,4 @@ jobs:
         with:
           project-url: https://github.com/orgs/simularium/projects/5
           github-token: ${{ secrets.SIMULARIUM }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
